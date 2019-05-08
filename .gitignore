@@ -1,0 +1,7 @@
+.vs/**
+.idea/**
+build/**
+**/bin/**
+**/obj/**
+**/Release/**
+**/Debug/**

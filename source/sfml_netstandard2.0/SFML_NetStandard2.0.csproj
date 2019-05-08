@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <AssemblyName>SFML.Portable</AssemblyName>
+    <RootNamespace>SFML</RootNamespace>
+    <RepositoryUrl>https://github.com/SpiceyWolf/SFML-Portable</RepositoryUrl>
+    <Version>1.0.0</Version>
+    <RepositoryType>Git</RepositoryType>
+    <AssemblyVersion>2.5.0.0</AssemblyVersion>
+    <Company>laurent@sfml-dev.org</Company>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputPath>..\..\build\lib\Debug</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputPath>..\..\build\lib\Release</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Deployment.LinuxDeployData generatePcFile="False" />
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+  <Import Project="..\bindings\SFML-Bindings.projitems" Label="Shared" Condition="Exists('..\bindings\SFML-Bindings.projitems')" />
+</Project>
