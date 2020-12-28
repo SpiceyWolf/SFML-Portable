@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <AssemblyName>SFML.Portable</AssemblyName>
+        <RootNamespace>SFML</RootNamespace>
+        <LangVersion>default</LangVersion>
+        <PackageId>SFML.Portable</PackageId>
+        <Title>SFML Portable</Title>
+        <Authors>SpiceyWolf</Authors>
+        <Description>SFML Portable is a modified release of the official SFML.Net including additional features which can help make game development a little bit smoother.</Description>
+        <Copyright>Copyright © Laurent Gomila</Copyright>
+        <PackageProjectUrl>https://www.sfml-dev.org/</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/SpiceyWolf/SFML-Portable/blob/master/LICENSE.txt</PackageLicenseUrl>
+        <PackageIconUrl>https://raw.githubusercontent.com/SpiceyWolf/SFML-Portable/master/icon.png</PackageIconUrl>
+        <RepositoryUrl>https://github.com/SpiceyWolf/SFML-Portable</RepositoryUrl>
+        <RepositoryType>Git</RepositoryType>
+        <Company>laurent@sfml-dev.org</Company>
+        <Product>SFML.Portable</Product>
+        <AssemblyVersion>2.5.0.0</AssemblyVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+</Project>

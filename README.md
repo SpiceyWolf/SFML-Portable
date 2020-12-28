@@ -4,17 +4,7 @@
 This portable edition of SFML is not the official release and is maintained by :
 SpiceyWolf - SpiceyWolf.ArchaicSoft@outlook.com. 
 
-The aim of this library used to make SFML.Net more easily portable to 32/64 bit and cross platform without the use of compiler tags. Previous versions of portable started to incorporate extra tools to aid in game development with .Net and will continue to add onto these feature sets all in 1 compact library.
-
-Integrated controls will be dropped in favor of external ones that make use of platform specific dependancies. This way certain support wont need dropped entirely.
-
-## **Current Controls**
-
-SfSurface : Places a control containing a render event which can allow for natural event based rendering rather then the common practice of inheriting a control and hard coding the render events directly into it that has become common practice these days.
-
-Usage: Add an event for rendering, then begin draw code. Setting a view is optional, as well the Clear and dispatch are handled for you. Clear color can be customized using the BackColor property. Decide whether to use AutoDraw (For automatic render on timed intervals -- basicly a control oriented FPS) or to manually call the render from another place. The power is yours!
-
-SfWindow : Exactly the same as an SfSurface but with a window as the backend rather then a control.
+The aim of this library used to make SFML.Net more easily portable to 32/64 bit and cross platform without the use of compiler tags. Previous versions of portable started to incorporate extra tools to aid in game development with .Net all in 1 compact library.
 
 ## **Added Game Development Functionality**
 
@@ -31,8 +21,6 @@ These include :
 - SpriteStack
 
 The loaders will take a path to where your assets should go (without the extension) and will search through the compatible formats that SFML is capable of loading and return the first one found. The "Stack" variations will return arrays of the objects. Simply give it a directory where your assets should be and make sure they are named as numbers (0+). The loaders are designed to autofill gaps, so if you have 0-50 and skip 3 files and have 54-X then 50-53 will return generated textures to prevent broken arrays. The intension was to make it so if you have many files, you wont have to hunt down for gaps and deal with a bunch of nonsense, let the program run now and you fill it in later when its convenient for you as the developer. Do Note : These autostack loaders look for names that are made of a number then extension, no combinations and having any random REALLY high numbers like 10000.png in a folder with only 4 files will still make it return an array of size 10000.
-
-(MORE COMING SOON)
 
 (The below original readme has been modified to appear cleaner for git and made accurate to the current edition of sfml.net)
 
