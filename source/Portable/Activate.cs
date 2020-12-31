@@ -1,10 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using SFML.Gui;
-#if NET40
-using System.Windows.Forms;
-#endif
+using System.Net;
+using System.Threading;
 
 namespace SFML
 {
@@ -48,99 +46,209 @@ namespace SFML
 
             CheckInstall();
         }
+
         private static bool _initialized;
 
         /// <summary> If running on Windows OS, will return true. </summary>
-        public static bool Windows { get { Activate(); return _isWindows; } }
+        public static bool Windows
+        {
+            get
+            {
+                Activate();
+                return _isWindows;
+            }
+        }
+
         private static bool _isWindows;
 
         /// <summary> If running on Mac OS, will return true. </summary>
-        public static bool Mac { get { Activate(); return _isMac; } }
+        public static bool Mac
+        {
+            get
+            {
+                Activate();
+                return _isMac;
+            }
+        }
+
         private static bool _isMac;
 
         /// <summary> If running on Linux OS, will return true. </summary>
-        public static bool Linux { get { Activate(); return _isLinux; } }
+        public static bool Linux
+        {
+            get
+            {
+                Activate();
+                return _isLinux;
+            }
+        }
+
         private static bool _isLinux;
 
         private static bool _isBit64;
+
         /// <summary> If running on 32-bit/x86 system, will return true. </summary>
-        public static bool X86 { get { Activate(); return !_isBit64; } }
+        public static bool X86
+        {
+            get
+            {
+                Activate();
+                return !_isBit64;
+            }
+        }
+
         /// <summary> If running on 64-bit/x64 system, will return true. </summary>
-        public static bool X64 { get { Activate(); return _isBit64; } }
+        public static bool X64
+        {
+            get
+            {
+                Activate();
+                return _isBit64;
+            }
+        }
 
         private static void CheckInstall()
         {
-#if NET40
             if (_isWindows)
             {
-                var path = "C:/Program Files/SFML_2.5.0/";
-                path += _isBit64 ? "x64/" : "x86/";
-                if (!File.Exists(path + "csfml-audio-2.dll") ||
-                    !File.Exists(path + "csfml-graphics-2.dll") ||
-                    !File.Exists(path + "csfml-system-2.dll") ||
-                    !File.Exists(path + "csfml-window-2.dll")) goto InstallMsg;
+                var path = "C:/Program Files/SFML_Portable";
+                if (!Directory.Exists(path)) InstallCSFML();
 
+                path += $"/{(_isBit64 ? "x64/" : "x86/")}";
                 Environment.SetEnvironmentVariable("Path",
-                Environment.GetEnvironmentVariable("Path") + ";" +
-                Path.GetFullPath(path) + "; ");
+                    Environment.GetEnvironmentVariable("Path") + ";" +
+                    Path.GetFullPath(path) + "; ");
             }
             else if (_isMac)
             {
-                var path = "SOMEPATHHERE/libcsfml-";
-                if (!File.Exists(path + "audio.2.5") ||
-                    !File.Exists(path + "graphics.so.2.5") ||
-                    !File.Exists(path + "system.so.2.5") ||
-                    !File.Exists(path + "window.so.2.5"))
-                {
-                    Alert("This platform is not supported yet!");
-                    Environment.Exit(0);
-                }
+                var path = "/Library/Frameworks/sfml_portable";
+                if (!Directory.Exists(path)) InstallCSFML();
             }
             else if (_isLinux)
             {
-                var path = "/usr/local/lib/sfml_2.5.0/libcsfml-";
-                if (!File.Exists(path + "audio.so.2.5") ||
-                    !File.Exists(path + "graphics.so.2.5") ||
-                    !File.Exists(path + "system.so.2.5") ||
-                    !File.Exists(path + "window.so.2.5")) goto InstallMsg;
+                var path = "/usr/lib/sfml_portable";
+                if (!Directory.Exists(path)) InstallCSFML();
             }
-            else
-            {
-                Alert("Your operating system was not supported.");
-                Environment.Exit(0);
-            }
-#endif
+            else throw new Exception("Your operating system was not supported.");
 
             // Successful Activation
-            _initialized = true;                        
-            return;
-#if NET40
-            InstallMsg:
-            InvalidInstall();
-            Environment.Exit(0);
-#endif
+            _initialized = true;
         }
 
-#if NET40
-        private static void InvalidInstall()
+        private static void InstallCSFML()
         {
-            Alert("SFML-Portable could not locate SFML installation.\n\n" +
-                  "You will now be redirected to SFML installation for your system.");
+            // File Name
+            var fn = "csfml_";
+            if (_isWindows) fn += "windows.exe";
+            else if (_isMac) fn += "macosx.tar.gz";
+            else if (_isLinux) fn += "linux.tar.gz";
 
+            var file = $"{Environment.CurrentDirectory}/{fn}";
             var url = "https://github.com/SpiceyWolf/SFML-Portable" +
-                      "/raw/master/installer/Binaries/";
+                      $"/raw/master/installer/{fn}";
 
-            if (_isWindows) url += "(Windows)%20SFML-2.5.0.exe";
-            else if (_isMac) Environment.Exit(0); //url += "";
-            else if (_isLinux) url += "(Linux)%20sfml-2.5.0.deb";
+            // Download
+            DownloadFile(file, url);
 
-            Process.Start(url);
+            // Install
+            if (_isWindows)
+            {
+                var p = Process.Start(file);
+                p.WaitForInputIdle();
+                p.WaitForExit();
+
+                var path = "C:/Program Files/SFML_Portable";
+                if (!Directory.Exists(path))
+                    throw new Exception("SFML-Portable failed to install.");
+            }
+            else if (_isMac)
+            {
+                var path = "/Library/Frameworks/sfml_portable";
+                
+                InvokeCommand("", $"tar -xzf ./{fn}");
+                InvokeCommand("To complete the SFML_Portable required installation you must authorize sudo-",
+                    $"sudo cp -r ./sfml_portable {path}");
+                
+                if (!Directory.Exists(path))
+                    throw new Exception("SFML-Portable failed to install.");
+            }
+            else if (_isLinux)
+            {
+                var path = "/usr/lib/sfml_portable";
+                
+                InvokeCommand("", $"tar -xzf ./{fn}");
+                InvokeCommand("To complete the SFML_Portable required installation you must authorize sudo-",
+                    $"sudo cp -r ./sfml_portable {path}");
+                
+                if (!Directory.Exists(path))
+                    throw new Exception("SFML-Portable failed to install.");
+                
+                InvokeCommand("", "sudo ldconfig /usr/lib/sfml_portable");
+            }
+
+            // Cleanup
+            File.Delete(file);
         }
 
-        private static void Alert(string message)
+        private static void InvokeCommand(string notif, string command)
         {
-            MessageBox.Show(message);
+            if (notif != "") Console.WriteLine(notif);
+
+            var proc = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "/bin/bash",
+                    Arguments = $"-c \"{command}\"",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                }
+            };
+
+            proc.Start();
+            proc.WaitForExit();
         }
-#endif
+
+        private static void DownloadFile(string file, string url)
+        {
+            if (!File.Exists(file))
+                try
+                {
+                    var request = WebRequest.Create(url);
+                    using (var response = request.GetResponse())
+                    {
+                        using (var stream = response.GetResponseStream())
+                        {
+                            var fSize = response.ContentLength;
+                            const int bSize = 1024 * 1024;
+                            var buf = new byte[bSize];
+
+                            using (var f = new FileStream(file, FileMode.OpenOrCreate))
+                            {
+                                var len = stream.Read(buf, 0, bSize);
+
+                                while (len > 0)
+                                {
+                                    f.Write(buf, 0, len);
+
+                                    var progress = (int) (((float) f.Length / fSize) * 100);
+                                    Console.Write(
+                                        $"\rDownloading CSFML Installer: {progress}%");
+
+                                    len = stream.Read(buf, 0, bSize);
+                                    Thread.Sleep(1);
+                                }
+
+                                Console.WriteLine();
+                            }
+                        }
+                    }
+                }
+                catch (Exception err)
+                {
+                    throw new Exception("Failed to fetch required csfml installer files!" +
+                                        "\nReason: " + err);
+                }
+        }
     }
 }

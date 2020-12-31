@@ -11,6 +11,5 @@ namespace SFML.System
         public const string system = "csfml-system";
         /// <summary>CSFML Window Lib Name</summary>
         public const string window = "csfml-window";
-
     }
 }

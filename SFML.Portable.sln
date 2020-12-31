@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "documents", "documents", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFML_Portable", "source\SFML_Portable.csproj", "{4E085F85-11AC-4217-88D1-07166D48EC0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{8C05E390-8AAD-4F2D-A651-D0387ADF83E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGUI_Portable", "TGUI\TGUI_Portable.csproj", "{6B8F85AD-4977-435C-93D3-2100AD19B004}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{4E085F85-11AC-4217-88D1-07166D48EC0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E085F85-11AC-4217-88D1-07166D48EC0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E085F85-11AC-4217-88D1-07166D48EC0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C05E390-8AAD-4F2D-A651-D0387ADF83E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C05E390-8AAD-4F2D-A651-D0387ADF83E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C05E390-8AAD-4F2D-A651-D0387ADF83E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C05E390-8AAD-4F2D-A651-D0387ADF83E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B8F85AD-4977-435C-93D3-2100AD19B004}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B8F85AD-4977-435C-93D3-2100AD19B004}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B8F85AD-4977-435C-93D3-2100AD19B004}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B8F85AD-4977-435C-93D3-2100AD19B004}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
