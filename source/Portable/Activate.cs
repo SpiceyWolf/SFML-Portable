@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Threading;
 
@@ -21,7 +22,7 @@ namespace SFML
         {
             if (_initialized) return;
 
-            if (IntPtr.Size == 8) _isBit64 = true;
+            _isBit64 = Environment.Is64BitProcess;
             switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.Unix:
@@ -111,7 +112,8 @@ namespace SFML
         {
             if (_isWindows)
             {
-                var path = "C:/Program Files/SFML_Portable";
+                var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                           "/sfml_portable";
                 if (!Directory.Exists(path)) InstallCSFML();
 
                 path += $"/{(_isBit64 ? "x64/" : "x86/")}";
@@ -139,7 +141,7 @@ namespace SFML
         {
             // File Name
             var fn = "csfml_";
-            if (_isWindows) fn += "windows.exe";
+            if (_isWindows) fn += "windows.zip";
             else if (_isMac) fn += "macosx.tar.gz";
             else if (_isLinux) fn += "linux.tar.gz";
 
@@ -153,36 +155,20 @@ namespace SFML
             // Install
             if (_isWindows)
             {
-                var p = Process.Start(file);
-                p.WaitForInputIdle();
-                p.WaitForExit();
-
-                var path = "C:/Program Files/SFML_Portable";
+                var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                ZipFile.ExtractToDirectory(file, path);
                 if (!Directory.Exists(path))
                     throw new Exception("SFML-Portable failed to install.");
             }
             else if (_isMac)
             {
                 var path = "/Library/Frameworks/sfml_portable";
-                
-                InvokeCommand("", $"tar -xzf ./{fn}");
-                InvokeCommand("To complete the SFML_Portable required installation you must authorize sudo-",
-                    $"sudo cp -r ./sfml_portable {path}");
-                
-                if (!Directory.Exists(path))
-                    throw new Exception("SFML-Portable failed to install.");
+                UnixInstall(fn, path);
             }
             else if (_isLinux)
             {
                 var path = "/usr/lib/sfml_portable";
-                
-                InvokeCommand("", $"tar -xzf ./{fn}");
-                InvokeCommand("To complete the SFML_Portable required installation you must authorize sudo-",
-                    $"sudo cp -r ./sfml_portable {path}");
-                
-                if (!Directory.Exists(path))
-                    throw new Exception("SFML-Portable failed to install.");
-                
+                UnixInstall(fn, path);
                 InvokeCommand("", "sudo ldconfig /usr/lib/sfml_portable");
             }
 
@@ -249,6 +235,19 @@ namespace SFML
                     throw new Exception("Failed to fetch required csfml installer files!" +
                                         "\nReason: " + err);
                 }
+        }
+
+        private static void UnixInstall(string fn, string path)
+        {
+            InvokeCommand("", $"tar -xzf ./{fn}");
+            InvokeCommand(
+                "SFML-Portable, a dependency required for this application to operate, needs root " +
+                "permissions to move its native binaries to a location the operating system can detect. " +
+                "Please enter your credentials to permit this file move.",
+                $"sudo cp -r ./sfml_portable {path}");
+
+            if (!Directory.Exists(path))
+                throw new Exception("SFML-Portable failed to install.");
         }
     }
 }
