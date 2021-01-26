@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Net;
 using System.Threading;
 
@@ -112,8 +111,7 @@ namespace SFML
         {
             if (_isWindows)
             {
-                var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                           "/sfml_portable";
+                var path = "C:/Program Files/SFML_Portable";
                 if (!Directory.Exists(path)) InstallCSFML();
 
                 path += $"/{(_isBit64 ? "x64/" : "x86/")}";
@@ -141,7 +139,7 @@ namespace SFML
         {
             // File Name
             var fn = "csfml_";
-            if (_isWindows) fn += "windows.zip";
+            if (_isWindows) fn += "windows.exe";
             else if (_isMac) fn += "macosx.tar.gz";
             else if (_isLinux) fn += "linux.tar.gz";
 
@@ -155,8 +153,11 @@ namespace SFML
             // Install
             if (_isWindows)
             {
-                var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                ZipFile.ExtractToDirectory(file, path);
+                var p = Process.Start(file);
+                p.WaitForInputIdle();
+                p.WaitForExit();
+
+                var path = "C:/Program Files/SFML_Portable";
                 if (!Directory.Exists(path))
                     throw new Exception("SFML-Portable failed to install.");
             }
